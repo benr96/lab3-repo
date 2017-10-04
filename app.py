@@ -26,6 +26,11 @@ def hello(): # Name of the method
     cur.execute('''SELECT * FROM students''') # execute an SQL statment
     rv = cur.fetchall() #Retreive all rows returend by the SQL statment
     return str(rv)      #Return the data in a string format
+
+@app.route("/html")
+def hello2():
+	return('<html><body><h1>HELLO WORLD</h1></body></html>')
+
 if __name__ == "__main__":
         app.run(host='0.0.0.0', port='5000') #Run the flask app at port 5000
 
