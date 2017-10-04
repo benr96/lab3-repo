@@ -13,19 +13,37 @@ mysql.init_app(app)
 
 # The first route to access the webservice from http://external-ip:5000/ 
 #@pp.route("/add") this will create a new endpoints that can be accessed using http://external-ip:5000/add
-@app.route("/")
-def hello(): # Name of the method
-    cur = mysql.connection.cursor() #create a connection to the SQL instance
-    cur.execute('''drop table students''')
-    cur.execute('''CREATE TABLE students (studentName VARCHAR(255), email VARCHAR(255), studentID INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(studentID))''')
-    cur.execute('''insert into students(studentName, email) values("student1","student1@mydit.ie")''')
-    cur.execute('''insert into students(studentName, email) values("student2","student2@mydit.ie")''')
-    cur.execute('''insert into students(studentName, email) values("student3","student3@mydit.ie")''')
-    cur.execute('''update students set studentName = "Bob" where studentName = "student1"''')
-    cur.execute('''delete from students where studentName = "student2"''')
-    cur.execute('''SELECT * FROM students''') # execute an SQL statment
-    rv = cur.fetchall() #Retreive all rows returend by the SQL statment
-    return str(rv)      #Return the data in a string format
+@app.route("/recreate")
+def recreate(): # Name of the method
+	cur = mysql.connection.cursor() #create a connection to the SQL instance
+	cur.execute('''drop table students''')
+	cur.execute('''CREATE TABLE students (studentName VARCHAR(255), email VARCHAR(255), studentID INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(studentID))''')
+	cur.execute('''insert into students(studentName, email) values("student1","student1@mydit.ie")''')
+	cur.execute('''insert into students(studentName, email) values("student2","student2@mydit.ie")''')
+	cur.execute('''insert into students(studentName, email) values("student3","student3@mydit.ie")''')
+	mysql.connection.commit()
+	return ('Table Created')
+
+@app.route("/display")
+def display():
+	cur = mysql.connection.cursor()
+	cur.execute('''select * from students''') #execute an SQL statment
+	rv = cur.fetchall() #Retreive all rows returend by the SQL statment
+	return str(rv)      #Return the data in a string format
+
+@app.route("/update")
+def update():
+	cur = mysql.connection.cursor()
+	cur.execute('''update students set studentName = "Bob" where studentName = "student1"''')
+	mysql.connection.commit()
+	return ('Data updated')
+
+@app.route("/delete")
+def delete():
+	cur = mysql.connection.cursor()
+	cur.execute('''delete from students where studentName = "student2"''')
+	mysql.connection.commit()
+	return ('Data deleted')
 
 @app.route("/html")
 def hello2():
